@@ -1,7 +1,9 @@
 Example Voting App
 =========
 
-Test1
+
+
+from test branch 
 
 Getting started
 ---------------
