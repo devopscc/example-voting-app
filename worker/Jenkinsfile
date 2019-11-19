@@ -1,0 +1,51 @@
+pipeline {
+  agent any
+
+  tools{
+     maven 'Maven 3.6.2'
+  }
+
+  stages{
+      stage(build){
+          when {
+            changeset "**/worker/**"
+          }
+          steps{
+              echo 'compiling worker app'
+              dir('worker'){
+                sh 'mvn compile'
+              }
+          }
+      }
+      stage(test){
+          when {
+            changeset "**/worker/**"
+          }
+          steps{
+              echo 'testing worker app'
+              dir('worker'){
+                sh 'mvn clean test'
+              }
+          }
+      }
+      stage(package){
+           when {
+             branch "master"
+             changeset "**/worker/**"
+          }
+
+          steps{
+              echo 'packaging worker app'
+              dir('worker'){
+                sh 'mvn package -DskipTests'
+              }
+          }
+      }
+  }
+
+  post{
+    always{
+        echo 'This pipeline is completed..'
+    }
+  }
+}
